@@ -884,36 +884,123 @@
     });
   }
 
+  /* ---------- optional live sync from Google Sheets CSV ---------- */
+  function parseCSV(text) {
+    const lines = [];
+    let row = [""];
+    let inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      const next = text[i + 1];
+      if (c === '"') {
+        if (inQuotes && next === '"') { row[row.length - 1] += '"'; i++; }
+        else inQuotes = !inQuotes;
+      } else if (c === ',' && !inQuotes) {
+        row.push("");
+      } else if ((c === '\r' || c === '\n') && !inQuotes) {
+        if (c === '\r' && next === '\n') i++;
+        lines.push(row);
+        row = [""];
+      } else {
+        row[row.length - 1] += c;
+      }
+    }
+    if (row.length > 1 || (row.length === 1 && row[0] !== "")) lines.push(row);
+    return lines;
+  }
+
+  function loadGoogleSheetsIfConfigured(onDone) {
+    if (!SHOP.sheetCsvUrl) { onDone(); return; }
+    fetch(SHOP.sheetCsvUrl)
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+      .then(csv => {
+        const rows = parseCSV(csv);
+        if (rows.length < 2) { onDone(); return; }
+        const header = rows[0].map(h => h.trim().toLowerCase());
+        const idx = name => header.indexOf(name.toLowerCase());
+        const parsed = [];
+        for (let i = 1; i < rows.length; i++) {
+          const r = rows[i];
+          const id = (r[idx("id")] || "").trim();
+          const name = (r[idx("name")] || "").trim();
+          if (!id || !name) continue;
+          let colors = [];
+          try {
+            const raw = (r[idx("colors")] || "").trim();
+            if (raw.startsWith("[") || raw.startsWith("{")) colors = JSON.parse(raw);
+          } catch (e) { colors = []; }
+          if (!Array.isArray(colors) || !colors.length) {
+            colors = [{ name: "Standard", hex: "#33261F" }];
+          }
+          let photo = {};
+          try {
+            const rawP = (r[idx("photos")] || r[idx("photo")] || "").trim();
+            if (rawP.startsWith("{")) photo = JSON.parse(rawP);
+          } catch (e) { photo = {}; }
+
+          parsed.push({
+            id: id,
+            name: name,
+            type: (r[idx("type")] || "tote").trim(),
+            audience: (r[idx("audience")] || "all").trim(),
+            price: parseFloat((r[idx("price")] || "0").replace(/[^0-9.]/g, "")) || 0,
+            compareAt: r[idx("compareat")] ? (parseFloat(r[idx("compareat")].replace(/[^0-9.]/g, "")) || undefined) : undefined,
+            tag: (r[idx("tag")] || "").trim(),
+            blurb: (r[idx("blurb")] || "").trim(),
+            detail: (r[idx("detail")] || "").trim(),
+            materials: (r[idx("materials")] || "").trim(),
+            size: (r[idx("size")] || "").trim(),
+            strap: (r[idx("strap")] || "").trim(),
+            rating: parseFloat(r[idx("rating")] || "5.0") || 5.0,
+            reviews: parseInt(r[idx("reviews")] || "0", 10) || 0,
+            colors: colors,
+            photo: photo
+          });
+        }
+        if (parsed.length) {
+          PRODUCTS.length = 0;
+          parsed.forEach(p => PRODUCTS.push(p));
+        }
+        onDone();
+      })
+      .catch(err => {
+        console.warn("Could not load Google Sheet, using local products.js:", err);
+        onDone();
+      });
+  }
+
   /* ---------- boot ---------- */
   function boot() {
-    paintChrome();
-    initScroll();
-    initHero();
-    initDepartments();
-    initFilters();
-    initWishButton();
-    renderGrid();
-    initGiftRail();
-    initVoices();
-    initFaq();
-    initSignup();
-    initJumpLinks();
-    initBag();
-    initQuickView();
-    initKeys();
-    renderBag();
-    syncCounts();
-    syncChips();
-    initReveal();
-    initCounters();
+    loadGoogleSheetsIfConfigured(() => {
+      paintChrome();
+      initScroll();
+      initHero();
+      initDepartments();
+      initFilters();
+      initWishButton();
+      renderGrid();
+      initGiftRail();
+      initVoices();
+      initFaq();
+      initSignup();
+      initJumpLinks();
+      initBag();
+      initQuickView();
+      initKeys();
+      renderBag();
+      syncCounts();
+      syncChips();
+      initReveal();
+      initCounters();
 
-    /* a hash like #product-noor opens the quick look on load */
-    const h = location.hash;
-    if (h && h.indexOf("#product-") === 0) {
-      const id = h.replace("#product-", "");
-      if (byId(id)) setTimeout(() => openQuick(id), 400);
-    }
-    if (cartCount()) toast("Welcome back — " + cartCount() + (cartCount() === 1 ? " piece" : " pieces") + " still in your bag", "bag");
+      /* a hash like #product-noor opens the quick look on load */
+      const h = location.hash;
+      if (h && h.indexOf("#product-") === 0) {
+        const id = h.replace("#product-", "");
+        if (byId(id)) setTimeout(() => openQuick(id), 400);
+      }
+      if (nUnits()) toast("Welcome back — " + nUnits() + (nUnits() === 1 ? " piece" : " pieces") + " still in your bag", "bag");
+    });
   }
 
   if (document.readyState === "loading") on(document, "DOMContentLoaded", boot);

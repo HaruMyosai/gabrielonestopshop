@@ -21,7 +21,8 @@ const SHOP = {
   payment:     "GCash, Maya, bank transfer, or cash on delivery in Metro Manila.",
   pickupNote:  "Pick up in Santa Maria, Bulacan — J&T Express nationwide in 1–3 days, same-day Lalamove into Metro Manila.",
   founder:     "Jennifer Viri",
-  heroProduct: "amara"                 // <-- the piece the big banner shows
+  heroProduct: "amara",                // <-- the piece the big banner shows
+  sheetCsvUrl: ""                      // <-- OPTIONAL: Google Sheets published CSV URL for live no-code edits
 };
 
 /* ------------------------------------------------------------------
