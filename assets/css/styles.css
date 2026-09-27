@@ -468,13 +468,12 @@ body::before {
 .plate__city { font: 400 .62rem/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
 .plate__stack { position: absolute; right: -9%; bottom: -10%; width: 58%; }
 .plate__stack .bag-art { width: 100%; filter: drop-shadow(0 22px 30px rgba(34,26,22,.22)); }
-.pull {
-  margin: 0 0 .8em; font-family: var(--display); font-size: clamp(1.5rem,2.9vw,2.35rem);
-  line-height: 1.18; letter-spacing: -.022em; font-variation-settings: "SOFT" 30, "WONK" 1;
-}
-.pull::first-letter { color: var(--oxblood); }
-.signature { font: 400 .74rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
-.signature span { color: var(--oxblood); }
+.promise__facts { margin: 0 0 2.2em; }
+.promise__kicker { font: 400 .72rem/1.4 var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-soft); display: flex; align-items: center; gap: .7em; margin: 0 0 1.1em; }
+.promise__kicker::before { content: ""; width: 26px; height: 1px; background: var(--brass); flex: none; }
+.promise__line { font-size: clamp(1.5rem,2.9vw,2.35rem); line-height: 1.18; letter-spacing: -.022em; font-variation-settings: "SOFT" 30, "WONK" 1; margin: 0 0 .8em; max-width: 26ch; }
+.promise__sig { font: 400 .74rem/1.6 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+.promise__sig span { color: var(--oxblood); }
 .story__list { list-style: none; counter-reset: s; margin: 2.2em 0 0; padding: 0; }
 .story__list li {
   counter-increment: s; position: relative; padding: 1.15em 0 1.15em 3.3em;

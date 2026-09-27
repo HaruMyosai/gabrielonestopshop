@@ -535,8 +535,10 @@
 
   /* ---------- Messenger can't take pre-filled text, so copy the order then open the chat ---------- */
   function copyOrder(msg) {
+    // Open synchronously in the click — otherwise popup blockers eat it.
+    const win = window.open(messengerURL(), "_blank", "noopener");
+    if (!win) { window.location.href = messengerURL(); }
     const done = ok => {
-      window.open(messengerURL(), "_blank", "noopener");
       toast(ok ? "Order copied — paste it to " + (SHOP.messengerName || "us") + " on Messenger"
                : "Long-press to copy your order, then paste it on Messenger", "wa");
     };
