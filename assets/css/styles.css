@@ -673,6 +673,9 @@ body::before {
 .totals__grand { border-top: 1px solid var(--rule); padding-top: .7em; }
 .totals__grand dt, .totals__grand dd { color: var(--ink); font-size: 1rem; font-weight: 500; }
 .drawer__fine { margin: .9em 0 0; font-size: .76rem; line-height: 1.5; color: var(--ink-soft); }
+.copy-fallback { margin: .9em 0 0; }
+.copy-fallback p { font-size: .78rem; color: var(--ink-soft); margin: 0 0 .5em; }
+.copy-fallback textarea { width: 100%; font: 400 .78rem/1.5 var(--mono); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 10px; padding: .8em; resize: vertical; }
 /* ---------- 16 quick look ---------- */
 .modal {
   position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: clamp(12px,3vw,40px);

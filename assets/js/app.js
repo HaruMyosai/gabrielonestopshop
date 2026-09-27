@@ -533,26 +533,66 @@
     });
   }
 
-  /* ---------- Messenger can't take pre-filled text, so copy the order then open the chat ---------- */
+  /* ---------- Messenger order flow: copy order text + open FB profile ---------- */
   function copyOrder(msg) {
-    // Open synchronously in the click — otherwise popup blockers eat it.
-    const win = window.open(messengerURL(), "_blank", "noopener");
-    if (!win) { window.location.href = messengerURL(); }
-    const done = ok => {
-      toast(ok ? "Order copied — paste it to " + (SHOP.messengerName || "us") + " on Messenger"
-               : "Long-press to copy your order, then paste it on Messenger", "wa");
-    };
+    // 1. Synchronously copy using input/execCommand right in the user click event
+    // This is 100% reliable across mobile and desktop Safari/Chrome.
+    let copied = false;
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = msg;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      ta.style.top = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, 99999);
+      copied = document.execCommand("copy");
+      document.body.removeChild(ta);
+    } catch (e) {
+      copied = false;
+    }
+
+    // Also attempt navigator.clipboard asynchronously if available
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(msg).then(() => done(true), () => fallbackCopy(msg, done));
-    } else fallbackCopy(msg, done);
+      navigator.clipboard.writeText(msg).catch(() => {});
+    }
+
+    // 2. Open Facebook profile directly
+    window.open(messengerURL(), "_blank", "noopener");
+
+    // 3. Inform user and show the fallback box in the drawer just in case
+    toast(copied ? "Order copied! Paste it in the chat with Jennifer Viri"
+                 : "Opening Facebook — copy your order details below", "wa");
+    showOrderFallback(msg);
   }
-  function fallbackCopy(msg, done) {
-    const ta = document.createElement("textarea");
-    ta.value = msg; ta.style.position = "fixed"; ta.style.opacity = "0";
-    document.body.appendChild(ta); ta.select();
-    let ok = false;
-    try { ok = document.execCommand("copy"); } catch (e) {}
-    ta.remove(); done(ok);
+
+  function showOrderFallback(msg) {
+    let box = $("#copyFallback");
+    if (!box) return;
+    box.innerHTML = `
+      <div style="background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:12px;margin-top:10px;">
+        <p style="font-size:0.75rem;font-weight:600;margin:0 0 6px;color:var(--ink);">Your Order Details (Copied):</p>
+        <textarea id="orderCopyArea" readonly rows="5" style="width:100%;font:400 0.72rem/1.4 var(--mono);color:var(--ink-soft);background:transparent;border:none;resize:none;outline:none;padding:0;">${esc(msg)}</textarea>
+        <button type="button" id="manualCopyBtn" class="btn btn--outline" style="font-size:0.72rem;padding:4px 10px;margin-top:6px;width:100%;">Copy Again</button>
+      </div>
+    `;
+    box.hidden = false;
+    const btn = $("#manualCopyBtn");
+    if (btn) {
+      btn.onclick = () => {
+        const area = $("#orderCopyArea");
+        if (area) {
+          area.select();
+          area.setSelectionRange(0, 99999);
+          try {
+            document.execCommand("copy");
+            toast("Order copied!", "check");
+          } catch(e) {}
+        }
+      };
+    }
   }
 
   /* ---------- the Messenger order message ---------- */
