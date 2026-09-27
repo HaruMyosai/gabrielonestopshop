@@ -285,7 +285,7 @@ const FAQS = [
   { q: "How do I pay?", a: "GCash, Maya, bank transfer, or cash on delivery if you're inside Metro Manila. Nothing is charged on this page and no card details are ever collected — we agree the total on WhatsApp first." },
   { q: "How long is delivery?", a: "Metro Manila is 1–2 days with J&T Express and same-day with Lalamove if you message before 2pm. Provincial is 2–4 days. Cebu, Davao and Iloilo usually land on day 2. Add-ons for holidays and typhoon days, and we always tell you before you pay." },
   { q: "What if the colour is wrong when it arrives?", a: "Message us with a photo within 7 days and we swap it. Unused, tags on. We cover the return label on the first exchange; after that the courier fee is on you." },
-  { q: "Can you gift wrap and write a card?", a: "Always, and it's free. Add a line in the notes at checkout and we hand-write it on our card stock. We wrap in tissue and ribbon before the courier touches it." }
+  { q: "Do you gift wrap?", a: "Every piece ships wrapped in tissue and ribbon, ready to hand over. Add a note at checkout if it's for someone — a birthday, a thank-you, whatever — and we'll make the unboxing nice." }
 ];
 
 

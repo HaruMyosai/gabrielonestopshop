@@ -88,7 +88,7 @@
       "New in — " + newest.name,
       SHOP.priceNote,
       SHOP.payment,
-      "Hand-written gift cards, free",
+      "Tissue + ribbon gift wrapping",
       "Exchanges within 7 days",
       "Pickup in " + SHOP.city.split(",")[0],
       "Real photos on request"
