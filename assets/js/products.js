@@ -13,8 +13,9 @@ const SHOP = {
   priceNote:   "Prices in Philippine pesos, VAT included.",
   freeShipOver: 5000,                // free shipping threshold (₱)
   giftMax:      3000,                // the "gifting" shelf shows pieces under this
-  whatsapp:    "639171234567",       // <-- REPLACE: 63 + your number, digits only
-  phoneDisplay:"0917 123 4567",
+  phoneDisplay:"0917 123 4567",       // fallback text only; footer shows the Messenger link
+  messenger:   "https://www.facebook.com/profile.php?id=61553249600844",
+  messengerName: "Jennifer Viri",
   email:       "orders@gabrielonestopshop.com",
   instagram:   "gabrielonestopshop",
   payment:     "GCash, Maya, bank transfer, or cash on delivery in Metro Manila.",
@@ -274,15 +275,15 @@ const COLLECTIONS = [
 const TESTIMONIALS = [
   { quote: "Bought the Amara in oxblood in March. It has been to two weddings, a fiesta in Tayabas, and a very long Baguio haul, and it still looks new.", name: "Marisol D.", city: "Cebu City", bag: "The Amara Tote" },
   { quote: "Ordered the Roman duffel for my husband for a Baguio trip, then quietly ordered a second one for myself. No notes.", name: "Kaye B.", city: "Mandaluyong", bag: "The Roman Duffel" },
-  { quote: "She answered me on WhatsApp at 9pm on a Sunday and had the clutch wrapped before the courier picked it up Monday morning. That's the whole review.", name: "Ayesha K.", city: "Alabang", bag: "The Céleste Clutch" },
+  { quote: "She answered me on Messenger at 9pm on a Sunday and had the clutch wrapped before the courier picked it up Monday morning. That's the whole review.", name: "Ayesha K.", city: "Alabang", bag: "The Céleste Clutch" },
   { quote: "Third purchase. The Noor crossbody survived three years of EDSA jeepney rides and a full typhoon season of rain. Unreasonable quality for the price.", name: "Jom R.", city: "Davao City", bag: "The Noor Crossbody" }
 ];
 
 /* Small print rail ---------------------------------------------------- */
 const FAQS = [
   { q: "Are these real leather?", a: "Most pieces are premium vegan leather or coated canvas — a few woven styles use leather bases and say so in the description. Every product page states materials plainly." },
-  { q: "How does ordering work?", a: "Add what you like, then check out. It opens a WhatsApp message with your bag, colour, quantity and notes already written. We confirm stock and the shipping fee, you pay, we pack and send the tracking number the same or next day." },
-  { q: "How do I pay?", a: "GCash, Maya, bank transfer, or cash on delivery if you're inside Metro Manila. Nothing is charged on this page and no card details are ever collected — we agree the total on WhatsApp first." },
+  { q: "How does ordering work?", a: "Add what you like, then check out. Your order is copied for you — paste it into our Messenger chat. We confirm stock and the shipping fee, you pay, we pack and send the tracking number the same or next day." },
+  { q: "How do I pay?", a: "GCash, Maya, bank transfer, or cash on delivery if you're inside Metro Manila. Nothing is charged on this page and no card details are ever collected — we agree the total on Messenger first." },
   { q: "How long is delivery?", a: "Metro Manila is 1–2 days with J&T Express and same-day with Lalamove if you message before 2pm. Provincial is 2–4 days. Cebu, Davao and Iloilo usually land on day 2. Add-ons for holidays and typhoon days, and we always tell you before you pay." },
   { q: "What if the colour is wrong when it arrives?", a: "Message us with a photo within 7 days and we swap it. Unused, tags on. We cover the return label on the first exchange; after that the courier fee is on you." },
   { q: "Do you gift wrap?", a: "Every piece ships wrapped in tissue and ribbon, ready to hand over. Add a note at checkout if it's for someone — a birthday, a thank-you, whatever — and we'll make the unboxing nice." }

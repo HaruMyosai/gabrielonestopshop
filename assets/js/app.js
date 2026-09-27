@@ -1,6 +1,6 @@
 /* ============================================================
    APP — renders PRODUCTS into the page, runs the bag, and writes
-   the WhatsApp order message.
+   the Messenger order message.
    Anything the owner might change lives in products.js; this file
    only reads it.
    ============================================================ */
@@ -62,15 +62,15 @@
   }, true);
 
   /* ---------- contact wiring pulled from SHOP ---------- */
-  const waHref = txt => "https://wa.me/" + SHOP.whatsapp + "?text=" + encodeURIComponent(txt);
-  const waGeneral = () => waHref("Hi " + SHOP.founder + "! Question about a piece at " + SHOP.name + ".");
+  const messengerURL = () => SHOP.messenger || "#";
+  const messengerNote = () => "Hi " + SHOP.founder + "! Question about a piece at " + SHOP.name + ".";
 
   function paintChrome() {
-    ["#waLink", "#waAsk", "#footWa"].forEach(sel => { const el = $(sel); if (el) el.href = waGeneral(); });
+    ["#waLink", "#waAsk", "#footWa"].forEach(sel => { const el = $(sel); if (el) { el.href = messengerURL(); el.target = "_blank"; el.rel = "noopener"; } });
     const ig = $("#footIg");   if (ig)   ig.href = "https://instagram.com/" + SHOP.instagram;
     const mail = $("#footMail"); if (mail) mail.href = "mailto:" + SHOP.email;
     const tel = $("#footPhone");
-    if (tel) { tel.textContent = SHOP.phoneDisplay; tel.href = "tel:+" + SHOP.whatsapp; }
+    if (tel) { tel.textContent = SHOP.messengerName || "Message us"; tel.href = messengerURL(); tel.target = "_blank"; tel.rel = "noopener"; }
 
     const set = (sel, txt) => { const el = $(sel); if (el) el.textContent = txt; };
     set("#footerCity", SHOP.city.split(",")[0]);
@@ -468,7 +468,7 @@
 
     const free = sub >= SHOP.freeShipOver;
     set("#sumSubtotal", money(sub));
-    set("#sumShip", sub === 0 ? "Quoted on WhatsApp" : (free ? "Free" : "Quoted on WhatsApp"));
+    set("#sumShip", sub === 0 ? "Quoted on Messenger" : (free ? "Free" : "Quoted on Messenger"));
     set("#sumTotal", money(sub));
 
     const out = $("#checkout");
@@ -529,12 +529,31 @@
     on($("#checkout"), "click", () => {
       const msg = orderText();
       if (!msg) { toast("Your bag is empty", "bag"); return; }
-      window.open(waHref(msg), "_blank", "noopener");
-      toast("Opening WhatsApp with your bag written out", "wa");
+      copyOrder(msg);
     });
   }
 
-  /* ---------- the WhatsApp order message ---------- */
+  /* ---------- Messenger can't take pre-filled text, so copy the order then open the chat ---------- */
+  function copyOrder(msg) {
+    const done = ok => {
+      window.open(messengerURL(), "_blank", "noopener");
+      toast(ok ? "Order copied — paste it to " + (SHOP.messengerName || "us") + " on Messenger"
+               : "Long-press to copy your order, then paste it on Messenger", "wa");
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(msg).then(() => done(true), () => fallbackCopy(msg, done));
+    } else fallbackCopy(msg, done);
+  }
+  function fallbackCopy(msg, done) {
+    const ta = document.createElement("textarea");
+    ta.value = msg; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) {}
+    ta.remove(); done(ok);
+  }
+
+  /* ---------- the Messenger order message ---------- */
   function orderText() {
     if (!state.cart.length) return "";
     const lines = state.cart.map(l => {

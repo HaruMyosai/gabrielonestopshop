@@ -94,7 +94,7 @@ button { background: none; border: 0; cursor: pointer; padding: 0; }
 .kicker::before { content: ""; width: 26px; height: 1px; background: var(--brass); flex: none; }
 .kicker--light { color: rgba(239,229,212,.66); }
 .section-note { font-size: .95rem; color: var(--ink-soft); max-width: 44ch; margin: 1.1em 0 0; }
-.ul { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+.ul { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: .09em; text-decoration-thickness: .028em; }
 .link { text-decoration: underline; text-underline-offset: 3px; color: var(--oxblood); }
 .icon { width: 1.15em; height: 1.15em; flex: none; }
 .count {
@@ -254,8 +254,9 @@ body::before {
 @keyframes lineUp { to { transform: translateY(0); } }
 .hero__italic { font-style: italic; color: var(--oxblood); font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 144; position: relative; }
 .hero__italic::after {
-  content: ""; position: absolute; left: 2%; right: 2%; bottom: .08em; height: .05em;
-  background: var(--brass); transform: scaleX(0); transform-origin: left;
+  content: ""; position: absolute; left: 1.5%; right: 1.5%; bottom: .06em; height: .042em;
+  background: var(--brass); border-radius: 2px;
+  transform: scaleX(0); transform-origin: left;
   animation: scaleXIn .9s var(--ease-out) .95s forwards;
 }
 @keyframes scaleXIn { to { transform: scaleX(1); } }
